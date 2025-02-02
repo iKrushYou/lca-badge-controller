@@ -4,11 +4,12 @@
 #include <LittleFS.h>
 #include <ESPAsyncWebServer.h>
 #include "wsEventHandler.h"
+#include "gpio.h"
 
-#define SSID "ESP32 SoftAP" // This is the SSID that ESP32 will broadcast
+#define SSID "Badge Controller" // This is the SSID that ESP32 will broadcast
 // #define CAPTIVE_DOMAIN "http://domain-name-to-show" // This is the SSID that ESP32 will broadcast
-// Uncomment the following line to enable password in the wifi acces point
-// #define PASSWORD "12345678" // password should be atleast 8 characters to make it work
+// Uncomment the following line to enable password in the wifi access point
+#define PASSWORD "19091909" // password should be at least 8 characters to make it work
 #define DNS_PORT 53
 // Options to enable serial printing
 #define VERBOSE
@@ -29,16 +30,15 @@ void redirectToIndex(AsyncWebServerRequest *request)
 #endif
 }
 
-void setup()
-{
-  pinMode(2, OUTPUT);
+void setup() {
+  setupGpio();
 #ifdef VERBOSE
   Serial.begin(115200);
 #endif
 
   WiFi.disconnect();   // added to start with the wifi off, avoid crashing
-  WiFi.mode(WIFI_OFF); // added to start with the wifi off, avoid crashing
-  WiFi.mode(WIFI_AP);
+  WiFiClass::mode(WIFI_OFF); // added to start with the wifi off, avoid crashing
+  WiFiClass::mode(WIFI_AP);
 #ifndef PASSWORD
   WiFi.softAP(SSID);
 #else
@@ -48,7 +48,11 @@ void setup()
   dnsServer.start(DNS_PORT, "*", apIP);
 
 #ifdef VERBOSE
-  Serial.println("\nWiFi AP is now running\nIP address: ");
+  Serial.print("\nWiFi AP: ");
+  Serial.print(SSID);
+  Serial.print("\nWiFi Password: ");
+  Serial.print(PASSWORD);
+  Serial.print("\nIP Address: ");
   Serial.println(WiFi.softAPIP());
 #endif
 
@@ -63,7 +67,7 @@ void setup()
   // bind websocket to async web server
   websocket.onEvent(wsEventHandler);
   server.addHandler(&websocket);
-  // setup statuc web server
+  // setup static web server
   server.serveStatic("/", LittleFS, "/www/")
       .setDefaultFile("index.html");
   // Captive portal to keep the client
