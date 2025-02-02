@@ -1,7 +1,3 @@
-//
-// Created by Alex Krush on 1/21/25.
-//
-
 #ifndef GPIO_H
 #define GPIO_H
 

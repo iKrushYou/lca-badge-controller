@@ -1,7 +1,3 @@
-//
-// Created by Alex Krush on 1/21/25.
-//
-
 #include "gpio.h"
 #include <Arduino.h>  // Include Arduino library for pinMode and digitalWrite
 #include <Adafruit_NeoPixel.h>
@@ -10,7 +6,7 @@ Adafruit_NeoPixel pixels(NUM_PIXELS, LED_SERIAL_PIN, NEO_GRBW + NEO_KHZ800);
 
 void setupGpio() {
     pixels.begin();
-    pixels.show();  // Initialize all pixels to 'off'
+    pixels.show(); // Initialize all pixels to 'off'
 }
 
 void setLEDs(const int ledNum) {
@@ -22,5 +18,4 @@ void setLEDs(const int ledNum) {
     }
 
     pixels.show();
-
 }
